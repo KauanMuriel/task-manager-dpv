@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { IsNull, QueryFailedError, Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
 
@@ -7,10 +7,19 @@ export class UserService {
 
     public constructor() {
         this._repository = AppDataSource.getRepository(User);
+
+        this.create = this.create.bind(this);
+        this.getAll = this.getAll.bind(this);
+        this.getById = this.getById.bind(this);
+        this.delete = this.delete.bind(this);
     }
 
-    public create(user: User) {
-        return this._repository.create(user);
+    public async create(user: User) {
+        try {
+            return await this._repository.save(user);
+        }catch(error) {
+            throw new Error("Wasn't possible create a new user - " + error);
+        }
     }
 
     public async getAll() {
@@ -27,6 +36,10 @@ export class UserService {
 
     public async delete(id: number) {
         const userToRemove = await this.getById(id);
+        if (!userToRemove) {
+            throw new Error("The user was't found!");
+        }
+        
         return await this._repository.remove(userToRemove);
     }
 }

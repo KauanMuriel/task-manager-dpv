@@ -12,4 +12,9 @@ export class Category {
 
     @Column({ type: "enum", enum: Color })
     color: Color;
+
+    public constructor(name: string, color: Color) {
+        this.name = name;
+        this.color = color;
+    }
 }

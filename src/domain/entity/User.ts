@@ -15,6 +15,12 @@ export class User {
     @Column()
     password: string
 
-    @Column()
+    @Column({nullable: true})
     weight: number
+
+    public constructor(username: string, email: string, password: string) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 }
