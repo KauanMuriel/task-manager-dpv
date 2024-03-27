@@ -1,5 +1,5 @@
 import { Repository } from "typeorm";
-import { Category } from "../entity/Category";
+import { Category } from "../entity/category";
 import { AppDataSource } from "../data-source";
 
 export class CategoryService {
@@ -7,6 +7,11 @@ export class CategoryService {
 
     public constructor() {
         this._repository = AppDataSource.getRepository(Category);
+
+        this.create = this.create.bind(this);
+        this.getAll = this.getAll.bind(this);
+        this.getById = this.getById.bind(this);
+        this.delete = this.delete.bind(this);
     }
 
     public async getAll(): Promise<Category[]> {

@@ -1,6 +1,6 @@
 import { IsNull, QueryFailedError, Repository } from "typeorm";
 import { AppDataSource } from "../data-source";
-import { User } from "../entity/User";
+import { User } from "../entity/user";
 
 export class UserService {
     private _repository: Repository<User>;

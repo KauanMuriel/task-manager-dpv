@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Category } from "./Category";
+import { Category } from "./category";
 import { Status } from "../enum/Status";
-import { User } from "./User";
+import { User } from "./user";
 
 @Entity()
 export class Task {

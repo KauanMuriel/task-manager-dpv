@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { CategoryService } from '../service/CategoryService';
-import { Category } from '../entity/Category';
+import { CategoryService } from '../service/category.service';
+import { Category } from '../entity/category';
 import { Color } from '../enum/Color';
 
 class CategoryController {
