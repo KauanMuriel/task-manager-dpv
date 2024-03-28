@@ -2,6 +2,7 @@ import { Router } from "express";
 import userController from "./controller/user.controller";
 import taskController from "./controller/task.controller";
 import categoryController from "./controller/category.controller";
+import dtoValidationMiddleware from "../util/dtoValidation.middleware";
 
 const routes = Router();
 
