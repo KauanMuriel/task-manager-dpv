@@ -18,9 +18,10 @@ export class User {
     @Column({nullable: true})
     weight: number
 
-    public constructor(username: string, email: string, password: string) {
+    public constructor(username: string, email: string, password: string, weight?: number) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.weight = weight;
     }
 }

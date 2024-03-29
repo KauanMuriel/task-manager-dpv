@@ -1,9 +1,10 @@
 import { Request, Response } from 'express'
 import { UserService } from '../service/user.service'
 import { User } from '../entity/user';
-import { GetUserDto } from '../dto/getUser.dto';
+import { GetUserDto } from '../dto/get-user.dto';
 import NotFoundError from '../error/not-found.error';
 import HttpError from '../error/http.error';
+import { CreateUserDto } from '../dto/create-user.dto';
 
 class UserController {
     private _service: UserService;
@@ -31,10 +32,9 @@ class UserController {
 
         try {
             const user = await this._service.getById(id);
-            return res.json(user);
+            return res.json(new GetUserDto(user));
         } catch (error) {
             let statusCode: number;
-
             if (error instanceof NotFoundError) {
                 statusCode = 404;
             } else if (error instanceof HttpError) {
@@ -47,7 +47,8 @@ class UserController {
     }
 
     public async create(req: Request, res: Response) {
-        const reqUser = new User(req.body.username, req.body.email, req.body.password);
+        const reqCreateUser = new CreateUserDto(req.body);
+        const reqUser = new User(reqCreateUser.username, reqCreateUser.email, reqCreateUser.password, reqCreateUser.weight);
         try {
             const createdUser = await this._service.create(reqUser);
             return res.json(createdUser);
@@ -61,6 +62,12 @@ class UserController {
             const userDeleted = await this._service.delete(parseInt(req.params.id));
             return res.json(userDeleted);
         } catch (error) {
+            let statusCode: number;
+            if (error instanceof NotFoundError) {
+                statusCode = 404;
+            } else {
+                statusCode = 500;
+            }
             return res.status(400).json({ message: error.message });
         }
     }

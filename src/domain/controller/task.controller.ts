@@ -57,6 +57,44 @@ class TaskController {
             res.status(400).json({ message: "The user don't has tasks registered!"});
         }
     }
+
+    public getTasksByCategory = async (req: Request, res: Response) => {
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+            return res.status(400).json({ message: "The category must be an integer"});
+        }
+
+        const tasks = await this._service.getTasksByCategory(id);
+        return res.json(tasks);
+    }
+
+    public getTasksPending = async (req: Request, res: Response) => {
+        const tasks = await this._service.getTasksPending();
+        return res.json(tasks);
+    }
+
+    public getTasksCompleted = async (req: Request, res: Response) => {
+        const tasks = await this._service.getTasksCompleted();
+        return res.json(tasks);
+    }
+
+    public getNumberOfTasksByUser = async (req: Request, res: Response) => {
+        const userId = parseInt(req.params.id);
+        if (isNaN(userId)) {
+            return res.status(400).json({ message: "The user must be an integer"});
+        }
+        const numberOfTasks = await this._service.getNumberOfTasksByUser(userId);
+        return res.json(numberOfTasks);
+    }
+
+    public getLatestTaskOfUser = async (req: Request, res: Response) => {
+        const userId = parseInt(req.params.id);
+        if (isNaN(userId)) {
+            return res.status(400).json({ message: "The user must be an integer"});
+        }
+        const latestTask = await this._service.getLatestTaskOfUser(userId);
+        return res.json(latestTask);
+    }
 }
 
 export default new TaskController();

@@ -16,4 +16,11 @@ export class CreateUserDto {
     @IsNumber()
     @ValidateIf((object, value) => value !== undefined)
     weight!: number | null;
+
+    public constructor(reqBody) {
+        this.username = reqBody.username;
+        this.email = reqBody.email;
+        this.password = reqBody.password;
+        this.weight = reqBody.weigth
+    }
 }
