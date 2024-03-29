@@ -1,7 +1,5 @@
-# Awesome Project Build with TypeORM
+# Task Manager
 
-Steps to run this project:
+This repository contains the backend of a system called Task Manager, developed using REST api standards for communication. It enables complete tracking of activities created by a user, with filtering and categorization options, which provides better organization of day-to-day duties, and can be used to track any type of activities, from personal to professional.
 
-1. Run `npm i` command
-2. Setup database settings inside `data-source.ts` file
-3. Run `npm start` command
+This project was developed as part of the evaluation of the professional challenge discipline V of the software engineering degree program at Unicesumar.
