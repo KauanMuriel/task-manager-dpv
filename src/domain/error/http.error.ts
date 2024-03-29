@@ -1,13 +1,9 @@
-import { stat } from "fs";
-
 class HttpError extends Error {
-    statusCode: number;
+    name: string = "NotFound";
 
-    constructor(statusCode: number, message: string) {
+    constructor(message: string) {
         super(message);
-
-        this.name = "HttpError";
-        this.statusCode = statusCode;
+        Object.setPrototypeOf(this, HttpError.prototype);
     }
 }
 

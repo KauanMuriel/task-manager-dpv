@@ -1,6 +1,9 @@
 import { Request, Response } from 'express'
 import { UserService } from '../service/user.service'
 import { User } from '../entity/user';
+import { GetUserDto } from '../dto/getUser.dto';
+import NotFoundError from '../error/not-found.error';
+import HttpError from '../error/http.error';
 
 class UserController {
     private _service: UserService;
@@ -15,31 +18,50 @@ class UserController {
     }
 
     public async getAll(req: Request, res: Response) {
-        const users = await this._service.getAll(); 
-        return res.json(users);
+        const users = await this._service.getAll();
+        const usersDto = users.map(user => new GetUserDto(user));
+        return res.json(usersDto);
     }
 
     public async getById(req: Request, res: Response) {
-        const user = await this._service.getById(parseInt(req.params.id));
-        return res.json(user);
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) {
+            return res.status(400).json({ message: "The id must be a integer!" });
+        }
+
+        try {
+            const user = await this._service.getById(id);
+            return res.json(user);
+        } catch (error) {
+            let statusCode: number;
+
+            if (error instanceof NotFoundError) {
+                statusCode = 404;
+            } else if (error instanceof HttpError) {
+                statusCode = 400;
+            } else {
+                statusCode = 500;
+            }
+            return res.status(statusCode).json({ message: error.message });
+        }
     }
 
     public async create(req: Request, res: Response) {
         const reqUser = new User(req.body.username, req.body.email, req.body.password);
         try {
-            const createdUser = await this._service.create(reqUser); 
+            const createdUser = await this._service.create(reqUser);
             return res.json(createdUser);
-        }catch(error) {
+        } catch (error) {
             return res.status(400).json({ message: error.message });
         }
     }
 
     public async delete(req: Request, res: Response) {
         try {
-            const userDeleted = await this._service.delete(parseInt(req.params.id)); 
+            const userDeleted = await this._service.delete(parseInt(req.params.id));
             return res.json(userDeleted);
-        } catch(error) {
-            return res.status(400).json({message: error.message});
+        } catch (error) {
+            return res.status(400).json({ message: error.message });
         }
     }
 }

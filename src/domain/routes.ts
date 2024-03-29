@@ -3,12 +3,13 @@ import userController from "./controller/user.controller";
 import taskController from "./controller/task.controller";
 import categoryController from "./controller/category.controller";
 import dtoValidationMiddleware from "../util/dtoValidation.middleware";
+import { CreateUserDto } from "./dto/createUser.dto";
 
 const routes = Router();
 
 routes.get('/user', userController.getAll);
 routes.get('/user/:id', userController.getById);
-routes.post('/user', userController.create);
+routes.post('/user', dtoValidationMiddleware(CreateUserDto), userController.create);
 routes.delete('/user/:id', userController.delete);
 
 routes.get('/task', taskController.getAll);

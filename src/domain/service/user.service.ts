@@ -1,6 +1,7 @@
-import { IsNull, QueryFailedError, Repository } from "typeorm";
-import { AppDataSource } from "../data-source";
 import { User } from "../entity/user";
+import { Repository } from "typeorm";
+import { AppDataSource } from "../data-source";
+import NotFoundError from "../error/not-found.error";
 
 export class UserService {
     private _repository: Repository<User>;
@@ -27,19 +28,18 @@ export class UserService {
     }
 
     public async getById(id: number): Promise<User> {
-        return await this._repository.findOne({
-            where: {
-                id: id
-            }
+        const user = await this._repository.findOne({
+            where: { id: id }
         });
-    }
 
+        if (!user) {
+            throw new NotFoundError('The user was not found!');
+        }
+        return user;
+    }
+    
     public async delete(id: number) {
         const userToRemove = await this.getById(id);
-        if (!userToRemove) {
-            throw new Error("The user was't found!");
-        }
-        
         return await this._repository.remove(userToRemove);
     }
 }

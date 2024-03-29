@@ -11,7 +11,7 @@ function dtoValidationMiddleware(type: any, skipMissingProperties = false): Requ
                 if (errors.length > 0) {
                     const dtoErrors = errors.map((error: ValidationError) =>
                         (Object as any).values(error.constraints)).join(", ");
-                    next(new HttpError(400, dtoErrors));
+                    next(new HttpError(dtoErrors));
                 } else {
                     req.body = dtoObject;
                     next();
