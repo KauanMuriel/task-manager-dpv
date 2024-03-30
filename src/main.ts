@@ -1,11 +1,9 @@
-import { env } from "process";
 import App from "./app"
 import { AppDataSource } from "./domain/data-source"
 
-console.log(env.DB_HOST)
-
 AppDataSource.initialize().then(async () => {
+    let http = require(`http`);
+    http.createServer(App).listen(3000, 'server');
 
-    App.listen(3000, 'localhost');
-
+    console.log(process.env)
 }).catch(error => console.log(error))

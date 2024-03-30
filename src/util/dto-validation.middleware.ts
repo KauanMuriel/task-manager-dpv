@@ -1,10 +1,10 @@
 import { plainToClass, plainToInstance } from "class-transformer";
 import { validate, ValidationError } from "class-validator";
-import { RequestHandler } from "express";
+import { Request, RequestHandler } from "express";
 import HttpError from "../domain/error/http.error";
 
 function dtoValidationMiddleware(type: any, skipMissingProperties = false): RequestHandler {
-    return (req, res, next) => {
+    return (req: Request, res, next) => {
         const dtoObject = plainToInstance(type, req.body);
         validate(dtoObject, { skipMissingProperties })
             .then((errors: ValidationError[]) => {
