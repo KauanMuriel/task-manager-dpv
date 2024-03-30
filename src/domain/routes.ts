@@ -5,9 +5,11 @@ import dtoValidationMiddleware from "../util/dto-validation.middleware";
 import { CreateCategoryDto } from "./dto/create-category.dto";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { CreateTaskDto } from "./dto/create-task.dto";
-import { Router } from "express";
+import { Request, Response, Router } from "express";
 
 const routes = Router();
+
+routes.get('/ping', (req: Request, res: Response) => { return res.json({ message: "pong"})});
 
 routes.get('/user', userController.getAll);
 routes.get('/user/:id', userController.getById);

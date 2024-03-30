@@ -47,8 +47,7 @@ class UserController {
     }
 
     public async create(req: Request, res: Response) {
-        const reqCreateUser = new CreateUserDto(req.body);
-        const reqUser = new User(reqCreateUser.username, reqCreateUser.email, reqCreateUser.password, reqCreateUser.weight);
+        const reqUser = new User(req.body.username, req.body.email, req.body.password, req.body.weight);
         try {
             const createdUser = await this._service.create(reqUser);
             return res.json(createdUser);
