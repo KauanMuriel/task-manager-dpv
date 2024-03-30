@@ -61,7 +61,32 @@ export class TaskService {
         return await this._repository.findOne({ where: { user: { id: userId}}, order: { createdAt: 'DESC'}});
     }
 
+    public getOldestTaskOfUser = async (userId: number) => {
+        return await this._repository.findOne({ where: { user: {id: userId}}, order: { createdAt: 'ASC'}});
+    }
+
     public getNumberOfTasksByUser = async (userId: number): Promise<Number> => {
         return await this._repository.countBy({user: {id: userId}});
+    }
+
+    public getAverageCompletionRateOfTasks = async (): Promise<Number> => {
+        const numberOfTasks = await this._repository.count();
+        return numberOfTasks / await this._repository.count({ where: { status: Status.COMPLETED}});
+    }
+
+    public getTaskWithLongestDescription = async (): Promise<Task> => {
+        return await this._repository
+            .createQueryBuilder('task')
+            .orderBy('LENGTH(task.description)', 'DESC')
+            .getOne();
+    }
+
+    public getTasksGroupedByCategory = async (): Promise<Task[]> => {
+        return await this._repository
+            .createQueryBuilder('task')
+            .select('task.category')
+            .addSelect('SUM(task.id)', "quantity")
+            .groupBy('task.category')
+            .getRawMany();
     }
 }
