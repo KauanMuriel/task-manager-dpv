@@ -1,7 +1,7 @@
 import { DeleteResult, Repository, UpdateResult } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { Task } from "../entity/task";
-import { Status } from "../enum/Status";
+import { Status } from "../enum/status";
 
 export class TaskService {
     private _repository: Repository<Task>;

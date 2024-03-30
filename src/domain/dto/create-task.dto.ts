@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsNumber, IsString, ValidateIf } from "class-validator";
-import { Status } from "../enum/Status";
+import { Status } from "../enum/status";
 
 export class CreateTaskDto {
     @ValidateIf((object, value) => value !== undefined)

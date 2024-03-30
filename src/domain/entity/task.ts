@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Category } from "./category";
-import { Status } from "../enum/Status";
+import { Status } from "../enum/status";
 import { User } from "./user";
 
 @Entity()

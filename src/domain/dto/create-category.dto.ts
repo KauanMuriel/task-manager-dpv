@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsString } from "class-validator";
-import { Color } from "../enum/Color";
+import { Color } from "../enum/color";
 
 export class CreateCategoryDto {
     @IsString()

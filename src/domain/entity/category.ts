@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { Color } from "../enum/Color";
+import { Color } from "../enum/color";
 
 @Entity()
 export class Category {

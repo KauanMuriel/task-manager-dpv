@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { CategoryService } from '../service/category.service';
 import { Category } from '../entity/category';
-import { Color } from '../enum/Color';
+import { Color } from '../enum/color';
 
 class CategoryController {
     private _service: CategoryService;
