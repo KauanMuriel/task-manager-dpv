@@ -95,6 +95,30 @@ class TaskController {
         const latestTask = await this._service.getLatestTaskOfUser(userId);
         return res.json(latestTask);
     }
+
+    public getOldestTaskOfUser = async (req: Request, res: Response)  => {
+        const userId = parseInt(req.params.id);
+        if (isNaN(userId)) {
+            return res.status(400).json({ message: "The user must be an integer"});
+        }
+        const oldestTask = await this._service.getOldestTaskOfUser(userId);
+        return res.json(oldestTask);
+    }
+
+    public getTaskWithLongestDescription = async (req: Request, res: Response) => {
+        const task = await this._service.getTaskWithLongestDescription();
+        return res.json(task);
+    }
+
+    public getAverageCompletionRateOfTasks = async (req: Request, res: Response) => {
+        const completionRate = await this._service.getAverageCompletionRateOfTasks();
+        return res.json(completionRate);
+    }
+
+    public getTasksGroupedByCategory = async (req: Request, res: Response) => {
+        const tasks = await this._service.getTasksGroupedByCategory();
+        return res.json(tasks);
+    }
 }
 
 export default new TaskController();

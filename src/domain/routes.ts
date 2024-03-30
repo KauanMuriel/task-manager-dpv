@@ -20,8 +20,11 @@ routes.get('/task', taskController.getAll);
 routes.get('/task/:id', taskController.getById);
 routes.get('/task/pending', taskController.getTasksPending);
 routes.get('/task/completed', taskController.getTasksCompleted);
+routes.get('/task/by-category', taskController.getTasksGroupedByCategory);
+routes.get('/task/longest-description', taskController.getTaskWithLongestDescription);
 routes.get('/task/user/:id', taskController.getUserTasks)
 routes.get('/task/user/:id/latest', taskController.getLatestTaskOfUser);
+routes.get('/task/user/:id/oldest', taskController.getOldestTaskOfUser);
 routes.get('/task/user/:id/count', taskController.getNumberOfTasksByUser);
 routes.get('/task/category/:id', taskController.getTasksByCategory);
 routes.post('/task', dtoValidationMiddleware(CreateTaskDto), taskController.create);
