@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { TaskService } from "../service/task.service";
 import { Task } from "../entity/task";
+import { CreateUpdateTaskDto } from "../dto/create-update-task.dto";
 
 class TaskController {
     private _service: TaskService;
@@ -24,7 +25,13 @@ class TaskController {
 
     public async update(req: Request, res: Response) {
         try {
-            const updatedTask = await this._service.update(new Task());
+            const taskId = parseInt(req.params.id);
+
+            if (isNaN(taskId)) {
+                return res.status(400).json({ message: "The category id must be an integer"});
+            }
+
+            const updatedTask = await this._service.update(taskId, req.body as CreateUpdateTaskDto);
             return res.json(updatedTask);
         } catch(error) {
             res.status(400).json({message: error.message});
@@ -33,7 +40,7 @@ class TaskController {
 
     public async create(req: Request, res: Response) {
         try {
-            const createdTask = this._service.create(req.body);
+            const createdTask = this._service.create(req.body as CreateUpdateTaskDto);
             res.json(createdTask);
         } catch(error) {
             res.status(400).json({message: error.message});
@@ -61,7 +68,7 @@ class TaskController {
     public getTasksByCategory = async (req: Request, res: Response) => {
         const id = parseInt(req.params.id);
         if (isNaN(id)) {
-            return res.status(400).json({ message: "The category must be an integer"});
+            return res.status(400).json({ message: "The category id must be an integer"});
         }
 
         const tasks = await this._service.getTasksByCategory(id);
@@ -81,25 +88,25 @@ class TaskController {
     public getNumberOfTasksByUser = async (req: Request, res: Response) => {
         const userId = parseInt(req.params.id);
         if (isNaN(userId)) {
-            return res.status(400).json({ message: "The user must be an integer"});
+            return res.status(400).json({ message: "The user id must be an integer"});
         }
         const numberOfTasks = await this._service.getNumberOfTasksByUser(userId);
         return res.json(numberOfTasks);
     }
 
-    public getLatestTaskOfUser = async (req: Request, res: Response) => {
+    public getNewestTaskOfUser = async (req: Request, res: Response) => {
         const userId = parseInt(req.params.id);
         if (isNaN(userId)) {
-            return res.status(400).json({ message: "The user must be an integer"});
+            return res.status(400).json({ message: "The user id must be an integer"});
         }
-        const latestTask = await this._service.getLatestTaskOfUser(userId);
+        const latestTask = await this._service.getNewestTaskOfUser(userId);
         return res.json(latestTask);
     }
 
     public getOldestTaskOfUser = async (req: Request, res: Response)  => {
         const userId = parseInt(req.params.id);
         if (isNaN(userId)) {
-            return res.status(400).json({ message: "The user must be an integer"});
+            return res.status(400).json({ message: "The user id must be an integer"});
         }
         const oldestTask = await this._service.getOldestTaskOfUser(userId);
         return res.json(oldestTask);

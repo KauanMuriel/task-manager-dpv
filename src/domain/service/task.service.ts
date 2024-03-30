@@ -1,92 +1,107 @@
-import { DeleteResult, Repository, UpdateResult } from "typeorm";
-import { AppDataSource } from "../data-source";
+import { DeleteResult, UpdateResult } from "typeorm";
 import { Task } from "../entity/task";
 import { Status } from "../enum/status";
+import { CreateUpdateTaskDto } from "../dto/create-update-task.dto";
+import { TaskRepository } from "../repository/task.repository";
+import { CategoryRepository } from "../repository/category.repository";
+import { UserRepository } from "../repository/user.repository";
+import NotFoundError from "../error/not-found.error";
 
 export class TaskService {
-    private _repository: Repository<Task>;
+    private _taskRepository: TaskRepository;
+    private _userRepository: UserRepository;
+    private _categoryRepository: CategoryRepository;
 
     public constructor() {
-        this._repository = AppDataSource.getRepository(Task);
-
-        this.create = this.create.bind(this);
-        this.getAll = this.getAll.bind(this);
-        this.getById = this.getById.bind(this);
-        this.delete = this.delete.bind(this);
-        this.getUserTasks = this.getUserTasks.bind(this);
-        this.getTasksByCategory = this.getTasksByCategory.bind(this);
+        this._taskRepository = new TaskRepository();
+        this._categoryRepository = new CategoryRepository();
     }
 
-    public async getAll() {
-        return await this._repository.find();
+    public getAll = async () => {
+        return await this._taskRepository.getAll();
     }
 
-    public async getById(id: number): Promise<Task> {
-        return await this._repository.findOneBy({id: id});
+    public getById = async (id: number): Promise<Task> => {
+        return await this._taskRepository.getById(id);
     }
 
-    public async update(task: Task): Promise<UpdateResult> {
-        return await this._repository.update({id: task.id}, task);
+    public update = async (id: number, task: CreateUpdateTaskDto): Promise<UpdateResult> => {
+        const relatedUser = await this._userRepository.getById(task.userId);
+        const relatedCategory = await this._categoryRepository.getById(task.categoryId);
+
+        if (!relatedUser) throw new NotFoundError(`User with id ${task.userId} was not found!`);
+        if (!relatedCategory) throw new NotFoundError(`Cateogry with id ${task.categoryId} was not found!`);
+
+        const toBeUpdatedTask = new Task(
+            task.title,
+            task.description,
+            task.type,
+            task.status,
+            relatedCategory,
+            relatedUser
+        )
+        return await this._taskRepository.update(id, toBeUpdatedTask);
     }
 
-    public async create(task: Task): Promise<Task> {
-        return this._repository.save(task);
+    public create = async (task: CreateUpdateTaskDto): Promise<Task> => {
+        const relatedUser = await this._userRepository.getById(task.userId);
+        const relatedCategory = await this._categoryRepository.getById(task.categoryId);
+
+        if (!relatedUser) throw new NotFoundError(`User with id ${task.userId} was not found!`);
+        if (!relatedCategory) throw new NotFoundError(`Cateogry with id ${task.categoryId} was not found!`);
+
+        const newTask = new Task(
+            task.title, 
+            task.description, 
+            task.type, 
+            Status[task.status], 
+            relatedCategory, 
+            relatedUser
+        );
+        return this._taskRepository.save(newTask);
     }
 
-    public async delete(id: number): Promise<DeleteResult> {
-        return await this._repository.delete(id);
+    public delete = async (id: number): Promise<DeleteResult> => {
+        return await this._taskRepository.delete(id);
     }
 
-    public async getUserTasks(id: number): Promise<Task[]> {
-        return await this._repository.findBy({user: {id: id}});
+    public getUserTasks = async (id: number): Promise<Task[]> => {
+        return await this._taskRepository.getByUser(id);
     }
 
     public getTasksByCategory = async (id: number): Promise<Task[]> => {        
-        return await this._repository
-            .createQueryBuilder("task")
-            .innerJoinAndSelect("task.category", "category")
-            .where("category.id = :id", { id })
-            .getMany();
+        return await this._taskRepository.getByCategory(id);
     }
 
     public getTasksCompleted = async (): Promise<Task[]> => {
-        return await this._repository.find({ where: { status: Status.COMPLETED }});
+        return await this._taskRepository.getCompleted();
     }
 
     public getTasksPending = async (): Promise<Task[]> => {
-        return await this._repository.find({ where: { status: Status.PENDING }});
+        return await this._taskRepository.getPending();
     }
 
-    public getLatestTaskOfUser = async (userId: number) => {
-        return await this._repository.findOne({ where: { user: { id: userId}}, order: { createdAt: 'DESC'}});
+    public getNewestTaskOfUser = async (userId: number) => {
+        return await this._taskRepository.getNewestTaskOfUser(userId);
     }
 
     public getOldestTaskOfUser = async (userId: number) => {
-        return await this._repository.findOne({ where: { user: {id: userId}}, order: { createdAt: 'ASC'}});
+        return await this._taskRepository.getOldestTaskOfUser(userId);
     }
 
     public getNumberOfTasksByUser = async (userId: number): Promise<Number> => {
-        return await this._repository.countBy({user: {id: userId}});
+        return await this._taskRepository.getNumberOfUserTasks(userId);
     }
 
     public getAverageCompletionRateOfTasks = async (): Promise<Number> => {
-        const numberOfTasks = await this._repository.count();
-        return numberOfTasks / await this._repository.count({ where: { status: Status.COMPLETED}});
+        return await this._taskRepository.getAverageCompletionRate();
     }
 
     public getTaskWithLongestDescription = async (): Promise<Task> => {
-        return await this._repository
-            .createQueryBuilder('task')
-            .orderBy('LENGTH(task.description)', 'DESC')
-            .getOne();
+        return await this._taskRepository.getWithLongestDescription();
     }
 
     public getTasksGroupedByCategory = async (): Promise<Task[]> => {
-        return await this._repository
-            .createQueryBuilder('task')
-            .select('task.category')
-            .addSelect('SUM(task.id)', "quantity")
-            .groupBy('task.category')
-            .getRawMany();
+        return await this._taskRepository.getTasksGroupedByCategory();
     }
 }

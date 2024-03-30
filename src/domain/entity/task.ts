@@ -34,4 +34,13 @@ export class Task {
 
     @Column({type: "enum", enum: Status})
     status: Status;
+
+    public constructor(title: string, description: string, type: string, status: Status, category?: Category, user?: User) {
+        this.title = title;
+        this.description = description;
+        this.type = type;
+        this.status = status;
+        this.category = category;
+        this.user = user;
+    }
 }
