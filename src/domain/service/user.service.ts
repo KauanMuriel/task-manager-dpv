@@ -1,45 +1,36 @@
 import { User } from "../entity/user";
-import { Repository } from "typeorm";
-import { AppDataSource } from "../data-source";
+import { UserRepository } from "../repository/user.repository";
+import { DeleteResult } from "typeorm";
 import NotFoundError from "../error/not-found.error";
 
 export class UserService {
-    private _repository: Repository<User>;
+    private _userRepository: UserRepository;
 
     public constructor() {
-        this._repository = AppDataSource.getRepository(User);
-
-        this.create = this.create.bind(this);
-        this.getAll = this.getAll.bind(this);
-        this.getById = this.getById.bind(this);
-        this.delete = this.delete.bind(this);
+        this._userRepository = new UserRepository();
     }
 
-    public async create(user: User) {
+    public create = async (user: User) => {
         try {
-            return await this._repository.save(user);
+            return await this._userRepository.save(user);
         }catch(error) {
             throw new Error("Wasn't possible create a new user - " + error);
         }
     }
 
-    public async getAll() {
-        return await this._repository.find();
+    public getAll = async (): Promise<User[]> => {
+        return await this._userRepository.getAll();
     }
 
-    public async getById(id: number): Promise<User> {
-        const user = await this._repository.findOne({
-            where: { id: id }
-        });
+    public getById = async (id: number): Promise<User> => {
+        const user = await this._userRepository.getById(id);
 
-        if (!user) {
-            throw new NotFoundError('The user was not found!');
-        }
+        if (!user) throw new NotFoundError('The user was not found!');
+
         return user;
     }
     
-    public async delete(id: number) {
-        const userToRemove = await this.getById(id);
-        return await this._repository.remove(userToRemove);
+    public delete = async (id: number): Promise<DeleteResult> => {
+        return await this._userRepository.delete(id);
     }
 }

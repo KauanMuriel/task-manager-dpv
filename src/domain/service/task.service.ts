@@ -30,7 +30,7 @@ export class TaskService {
         const relatedCategory = await this._categoryRepository.getById(task.categoryId);
 
         if (!relatedUser) throw new NotFoundError(`User with id ${task.userId} was not found!`);
-        if (!relatedCategory) throw new NotFoundError(`Cateogry with id ${task.categoryId} was not found!`);
+        if (!relatedCategory) throw new NotFoundError(`Category with id ${task.categoryId} was not found!`);
 
         const toBeUpdatedTask = new Task(
             task.title,
@@ -48,7 +48,7 @@ export class TaskService {
         const relatedCategory = await this._categoryRepository.getById(task.categoryId);
 
         if (!relatedUser) throw new NotFoundError(`User with id ${task.userId} was not found!`);
-        if (!relatedCategory) throw new NotFoundError(`Cateogry with id ${task.categoryId} was not found!`);
+        if (!relatedCategory) throw new NotFoundError(`Category with id ${task.categoryId} was not found!`);
 
         const newTask = new Task(
             task.title, 
