@@ -1,7 +1,7 @@
 import { IsEnum, IsNotEmpty, IsString } from "class-validator";
 import { Color } from "../enum/color";
 
-export class CreateCategoryDto {
+export class CreateUpdateCategoryDto {
     @IsString()
     @IsNotEmpty()
     name: string;

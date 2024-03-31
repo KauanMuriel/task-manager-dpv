@@ -1,4 +1,4 @@
-import { DeleteResult, Repository } from "typeorm";
+import { DeleteResult, Repository, UpdateResult } from "typeorm";
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/user";
 
@@ -20,6 +20,10 @@ export class UserRepository {
     public save = async (user: User): Promise<User> => {
         return await this._databaseRepository.save(user);
     }
+
+    public update = async (user: User): Promise<UpdateResult> => {
+        return await this._databaseRepository.update(user.id, user);
+    } 
 
     public delete = async (id: number): Promise<DeleteResult> => {
         return await this._databaseRepository.delete(id);

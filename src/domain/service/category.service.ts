@@ -1,3 +1,5 @@
+import { CreateUpdateCategoryDto } from "../dto/create-update-category.dto";
+import { CreateUpdateTaskDto } from "../dto/create-update-task.dto";
 import { Category } from "../entity/category";
 import { CategoryRepository } from "../repository/category.repository";
 
@@ -18,6 +20,11 @@ export class CategoryService {
 
     public create = async (category: Category) => {
         return await this._categoryRepository.save(category);
+    }
+
+    public update = async (id: number, category: CreateUpdateCategoryDto) => {
+        const toBeUpdatedCategory = new Category(category.name, category.color);
+        return await this._categoryRepository.update(id, toBeUpdatedCategory);
     }
 
     public delete = async (id: number) => {
