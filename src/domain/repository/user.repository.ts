@@ -13,6 +13,10 @@ export class UserRepository {
         return await this._databaseRepository.findOneBy({id: id});
     }
 
+    public getByEmail = async (email: string): Promise<User> => {
+        return await this._databaseRepository.findOneBy({ email: email});
+    }
+
     public getAll = async (): Promise<User[]> => {
         return await this._databaseRepository.find();
     }

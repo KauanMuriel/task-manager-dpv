@@ -3,7 +3,7 @@ import taskController from "./controller/task.controller";
 import categoryController from "./controller/category.controller";
 import dtoValidationMiddleware from "../util/dto-validation.middleware";
 import { CreateUpdateCategoryDto } from "./dto/create-update-category.dto";
-import { CreateUserDto } from "./dto/create-user.dto";
+import { CreateUserDto } from "./dto/register.dto";
 import { CreateUpdateTaskDto } from "./dto/create-update-task.dto";
 import { Request, Response, Router } from "express";
 import { UpdateUserDto } from "./dto/update-user.dto";

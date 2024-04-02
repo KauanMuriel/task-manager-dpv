@@ -3,7 +3,7 @@ import { UserRepository } from "../repository/user.repository";
 import { DeleteResult, UpdateResult } from "typeorm";
 import NotFoundError from "../error/not-found.error";
 import { UpdateUserDto } from "../dto/update-user.dto";
-import { CreateUserDto } from "../dto/create-user.dto";
+import { RegisterDto } from "../dto/register.dto";
 
 export class UserService {
     private _userRepository: UserRepository;
@@ -24,7 +24,11 @@ export class UserService {
         return user;
     }
 
-    public create = async (user: CreateUserDto) => {
+    public getByEmail = async (email: string): Promise<User> => {
+        return await this._userRepository.getByEmail(email);
+    }
+
+    public create = async (user: RegisterDto) => {
         try {
             const newUser = new User(user.username, user.email, user.password, user.weight);
             return await this._userRepository.save(newUser);
@@ -42,5 +46,9 @@ export class UserService {
     
     public delete = async (id: number): Promise<DeleteResult> => {
         return await this._userRepository.delete(id);
+    }
+
+    public isEmailInUseAlready(email: string): boolean { 
+        return this._userRepository.getByEmail(email) != null;
     }
 }

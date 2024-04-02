@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import { UserService } from '../service/user.service'
 import { GetUserDto } from '../dto/get-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { CreateUserDto } from '../dto/create-user.dto';
+import { CreateUserDto } from '../dto/register.dto';
 import NotFoundError from '../error/not-found.error';
 import HttpError from '../error/http.error';
 

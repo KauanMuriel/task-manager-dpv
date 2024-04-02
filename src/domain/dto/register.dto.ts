@@ -1,6 +1,6 @@
-import { IsNotEmpty, IsNumber, IsString, MinLength, Validate, ValidateIf } from "class-validator";
+import { IsNotEmpty, IsNumber, IsString, MinLength, ValidateIf } from "class-validator";
 
-export class CreateUserDto {
+export class RegisterDto {
     @IsString()
     @MinLength(8, { message: "The username must have at least 8 characters"})
     username: string;
